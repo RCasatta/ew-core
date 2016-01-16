@@ -36,7 +36,8 @@ for tx in mempool:
     txs_data = rpc_connection.getrawtransaction( tx )
     for idx, tx_data in enumerate(txs_data):
       if "455720" in tx_data:
-        ewtxs.append( chunk[idx] )
+        decoded = rpc_tion.decoderawtransaction(tx_data)
+        ewtxs.append(decoded)
 
 print "-------------"
 print "mempool txs " + str(len(mempool))
@@ -46,15 +47,14 @@ f = open(processed_file,'w')
 f.write( json.dumps(mempool) ) # python will convert \n to os.linesep
 f.close() # you can omit in most cases as the destructor will call it
 
-#jsonresult = json.dumps(result, default=decimal_default)
-#print(jsonresult)
-
-#conn = httplib.HTTPConnection('eternitywall.it', 80)
-#conn.connect()
-#conn.request('POST', "/v1/hooks/ewtx?hash=%s" % (block_hash) , jsonresult)
-#resp = conn.getresponse()
-#conn.close()
-#print resp.status, resp.reason
+if len(ewtxs)>0 :
+  jsonresult = json.dumps(result, default=decimal_default)
+  conn = httplib.HTTPConnection('eternitywall.it', 80)
+  conn.connect()
+  conn.request('POST', "/v1/hooks/ewunconfirmedtx" , jsonresult)
+  resp = conn.getresponse()
+  conn.close()
+  print resp.status, resp.reason
 
 
  
