@@ -4,6 +4,7 @@ import json
 import sys
 import httplib
 import decimal
+import config
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 
 def decimal_default(obj):
@@ -11,11 +12,10 @@ def decimal_default(obj):
         return float(obj)
     raise TypeError
 
-rpc_user = "xenoky"
-rpc_password = "asf4tw5yhub3r9gjdrrmprg99627o98Gnfjgtyfgi74dE"
+conf = config.read_default_config();
 
 # rpc_user and rpc_password are set in the bitcoin.conf file
-rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332" % (rpc_user, rpc_password))
+rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332" % ( conf['rpcuser'], conf['rpcpassword']))
 
 getinfo = rpc_connection.getinfo()
 # print getinfo

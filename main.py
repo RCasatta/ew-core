@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 import config
 import time
