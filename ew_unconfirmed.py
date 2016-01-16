@@ -4,6 +4,7 @@ import json
 import sys
 import httplib
 import decimal
+import config
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 
 def decimal_default(obj):
@@ -11,26 +12,23 @@ def decimal_default(obj):
         return float(obj)
     raise TypeError
 
-rpc_user = "xenoky"
-rpc_password = "Sua39_0hKJhfgdr7ub39jrmp99278Gjgtyfgi75fk4eop3h_145by_s4dE"
+conf = config.read_default_config();
 
 # rpc_user and rpc_password are set in the bitcoin.conf file
-rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332" % (rpc_user, rpc_password))
+rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332"%( conf['rpcuser'] , conf['rpcpassword'] ) )
 
 mempool = rpc_connection.getrawmempool()
-print mempool
-for curr in mempool:
+n = 100 # 100 rpc function call every request
+mempool_chunks = [mempool[i:i+n] for i in range(0, len(mempool) , n) ]
+ewtxs = []
+for chunk in mempool_chunks:
+  txs_data = rpc_connection.batch_( [ ["getrawtransaction", x] for x in chunk ] )
+  for idx, tx_data in enumerate(txs_data):
+    if "455720" in tx_data:
+      ewtxs.append( chunk[idx] )
 
-   print curr
+print ewtxs;    
 
-
-#for tx in txs:
-#   rawtx = rpc_connection.getrawtransaction(tx)
-#   if "455720" in rawtx:
-#      dectx = rpc_connection.decoderawtransaction(rawtx)
-#      ewtxs.append(dectx)
-
-#result['tx'] = ewtxs
 #jsonresult = json.dumps(result, default=decimal_default)
 #print(jsonresult)
 
