@@ -47,8 +47,8 @@ f = open(processed_file,'w')
 f.write( json.dumps(mempool) ) # python will convert \n to os.linesep
 f.close() # you can omit in most cases as the destructor will call it
 
-if len(ewtxs)>0 :
-  jsonresult = json.dumps(result, default=decimal_default)
+if len(ewtxs)>0 : 
+  jsonresult = json.dumps(ewtxs, default=decimal_default)
   conn = httplib.HTTPConnection('eternitywall.it', 80)
   conn.connect()
   conn.request('POST', "/v1/hooks/ewunconfirmedtx" , jsonresult)
