@@ -43,7 +43,7 @@ while 1:
   print "elapsed: " + str(time.time() - starting)
   print "mempool txs: " + str(len(mempool))
   print "already done: " + str(already_done)
-  print "ewtxs: " + str(len(ewtxs)) + " of " + len(mempool) - already_done;
+  print "ewtxs: " + str(len(ewtxs)) + " of " + str(len(mempool) - already_done);
   processed = mempool   
 
   if len(ewtxs)>0 : 
