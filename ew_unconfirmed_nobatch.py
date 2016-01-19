@@ -54,6 +54,6 @@ while 1:
     resp = conn.getresponse()
     conn.close()
     print resp.status, resp.reason
-
+  time.sleep(5)
 
  
