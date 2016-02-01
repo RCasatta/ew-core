@@ -32,7 +32,7 @@ result['height'] = block['height']
 result['time']   = block['time']
 for tx in txs:
    rawtx = rpc_connection.getrawtransaction(tx)
-   if "455720" in rawtx:
+   if "4557" in rawtx:
       dectx = rpc_connection.decoderawtransaction(rawtx)
       ewtxs.append(dectx)
 
