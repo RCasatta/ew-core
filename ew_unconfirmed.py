@@ -58,7 +58,7 @@ while 1:
     print "elapsed: " + str(time.time() - starting)
     print "containEW: " + str(containEW)
 
-    if len(ewtxs)>0 and False :
+    if len(ewtxs)>0 :
         print "posting on EW"
         jsonresult = json.dumps(ewtxs, default=decimal_default)
         conn = httplib.HTTPConnection('eternitywall.it', 80)
