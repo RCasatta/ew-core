@@ -26,18 +26,21 @@ while 1:
     print "---------------------"
     print "mempool size: " + str(len(mempool))
     print "processed size: " + str(len(processed))
-    toprocess = list( set(mempool) - set(processed) )
+    processed_set = set(processed)
+    mempool_set   = set(mempool)
+    toprocess = list( mempool_set - processed_set )    
     print "toprocess size: " + str(len(toprocess))
+    processed = list( mempool_set & processed_set ) 
+    print "new processed size: " + str(len(processed))
     
     n = 20
     containEW = 0;
     toprocess_chunks = [toprocess[i:i+n] for i in range(0, len(toprocess) , n) ]
 
     ewtxs = []
-    processed = []
-
+    
     for i, chunk in enumerate(toprocess_chunks):
-      print str(i) + "/" + str(len(toprocess_chunks));
+      # print str(i) + "/" + str(len(toprocess_chunks));
       try:
         txs_data = rpc_connection.batch_( [ ["getrawtransaction", x] for x in chunk ] )
         for idx, tx_data in enumerate(txs_data):
@@ -51,15 +54,12 @@ while 1:
             ewtxs.append(decoded)
       except:
         print "Unexpected error:", sys.exc_info()[0]
-        
 
     print "elapsed: " + str(time.time() - starting)
-    print "mempool size: " + str(len(mempool))
-    print "processed size: " + str(len(processed))
     print "containEW: " + str(containEW)
-    print "ewtxs: " + str(len(ewtxs)) + " of " + str(len(mempool) - already_done);
 
-    if len(ewtxs)>0 and false :
+    if len(ewtxs)>0 and False :
+        print "posting on EW"
         jsonresult = json.dumps(ewtxs, default=decimal_default)
         conn = httplib.HTTPConnection('eternitywall.it', 80)
         conn.connect()
@@ -67,4 +67,5 @@ while 1:
         resp = conn.getresponse()
         conn.close()
         print resp.status, resp.reason
+    ewtxs=[]
     time.sleep(5)
