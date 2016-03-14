@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import json
-import sys
 import httplib
 import decimal
 import config
