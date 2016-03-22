@@ -6,6 +6,7 @@ import sys
 import httplib
 import decimal
 import config
+from datetime import datetime
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 
 def decimal_default(obj):
@@ -53,12 +54,13 @@ while 1:
                 decoded = rpc_connection.decoderawtransaction(tx_data)
                 #todo verify OPRETURUN STARTS WITH 455720 455741 455743
                 ewtxs.append(decoded)
-          except:
-            print "Unexpected error:", sys.exc_info()[0]
+          except Exception,e:
+            print "Unexpected error1:", sys.exc_info()[0]
+            print e
 
         print "elapsed: " + str(time.time() - starting)
         print "containEW: " + str(containEW)
-        print "now:" + time.time()
+        print "now:" + str(datetime.now())
 
         if len(ewtxs)>0 :
             print "posting on EW"
@@ -70,6 +72,7 @@ while 1:
             conn.close()
             print resp.status, resp.reason
         ewtxs=[]
-        time.sleep(5)
-    except:
-      print "Unexpected error:", sys.exc_info()[0]
+    except Exception,e:
+      print "Unexpected error2:", sys.exc_info()[0]
+      print e;
+    time.sleep(5)
