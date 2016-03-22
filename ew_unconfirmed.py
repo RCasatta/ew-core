@@ -21,51 +21,55 @@ rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332"%( conf['rpcuser'
 pattern=re.compile("4557(20|41|43)")
 processed = []
 while 1:
-    starting = time.time()
-    mempool = rpc_connection.getrawmempool()
-    print "---------------------"
-    print "mempool size: " + str(len(mempool))
-    print "processed size: " + str(len(processed))
-    processed_set = set(processed)
-    mempool_set   = set(mempool)
-    toprocess = list( mempool_set - processed_set )    
-    print "toprocess size: " + str(len(toprocess))
-    processed = list( mempool_set & processed_set ) 
-    print "new processed size: " + str(len(processed))
-    
-    n = 20
-    containEW = 0;
-    toprocess_chunks = [toprocess[i:i+n] for i in range(0, len(toprocess) , n) ]
+    try:
+        starting = time.time()
+        mempool = rpc_connection.getrawmempool()
+        print "---------------------"
+        print "mempool size: " + str(len(mempool))
+        print "processed size: " + str(len(processed))
+        processed_set = set(processed)
+        mempool_set   = set(mempool)
+        toprocess = list( mempool_set - processed_set )
+        print "toprocess size: " + str(len(toprocess))
+        processed = list( mempool_set & processed_set )
+        print "new processed size: " + str(len(processed))
 
-    ewtxs = []
-    
-    for i, chunk in enumerate(toprocess_chunks):
-      # print str(i) + "/" + str(len(toprocess_chunks));
-      try:
-        txs_data = rpc_connection.batch_( [ ["getrawtransaction", x] for x in chunk ] )
-        for idx, tx_data in enumerate(txs_data):
-          tx = chunk[idx];
-          processed.append(tx)
-          if pattern.search(tx_data):
-            print "tx_data contains 4547(20|41|43)"
-            containEW = containEW + 1
-            decoded = rpc_connection.decoderawtransaction(tx_data)
-            #todo verify OPRETURUN STARTS WITH 455720 455741 455743
-            ewtxs.append(decoded)
-      except:
-        print "Unexpected error:", sys.exc_info()[0]
+        n = 20
+        containEW = 0;
+        toprocess_chunks = [toprocess[i:i+n] for i in range(0, len(toprocess) , n) ]
 
-    print "elapsed: " + str(time.time() - starting)
-    print "containEW: " + str(containEW)
+        ewtxs = []
 
-    if len(ewtxs)>0 :
-        print "posting on EW"
-        jsonresult = json.dumps(ewtxs, default=decimal_default)
-        conn = httplib.HTTPConnection('eternitywall.it', 80)
-        conn.connect()
-        conn.request('POST', "/v1/hooks/ewunconfirmedtx" , jsonresult)
-        resp = conn.getresponse()
-        conn.close()
-        print resp.status, resp.reason
-    ewtxs=[]
-    time.sleep(5)
+        for i, chunk in enumerate(toprocess_chunks):
+          # print str(i) + "/" + str(len(toprocess_chunks));
+          try:
+            txs_data = rpc_connection.batch_( [ ["getrawtransaction", x] for x in chunk ] )
+            for idx, tx_data in enumerate(txs_data):
+              tx = chunk[idx];
+              processed.append(tx)
+              if pattern.search(tx_data):
+                print "tx_data contains 4547(20|41|43)"
+                containEW = containEW + 1
+                decoded = rpc_connection.decoderawtransaction(tx_data)
+                #todo verify OPRETURUN STARTS WITH 455720 455741 455743
+                ewtxs.append(decoded)
+          except:
+            print "Unexpected error:", sys.exc_info()[0]
+
+        print "elapsed: " + str(time.time() - starting)
+        print "containEW: " + str(containEW)
+        print "now:" + time.time()
+
+        if len(ewtxs)>0 :
+            print "posting on EW"
+            jsonresult = json.dumps(ewtxs, default=decimal_default)
+            conn = httplib.HTTPConnection('eternitywall.it', 80)
+            conn.connect()
+            conn.request('POST', "/v1/hooks/ewunconfirmedtx" , jsonresult)
+            resp = conn.getresponse()
+            conn.close()
+            print resp.status, resp.reason
+        ewtxs=[]
+        time.sleep(5)
+    except:
+      print "Unexpected error:", sys.exc_info()[0]
