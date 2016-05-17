@@ -21,6 +21,9 @@ conf = config.read_default_config();
 rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:8332"%( conf['rpcuser'] , conf['rpcpassword'] ) )
 pattern=re.compile("4557(20|41|43)")
 processed = []
+
+# if it's not working --> https://github.com/jgarzik/python-bitcoinrpc/pull/58/files
+
 while 1:
     try:
         starting = time.time()
