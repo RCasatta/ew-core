@@ -58,3 +58,5 @@ target/
 .idea/
 
 *.save
+
+ew.conf
