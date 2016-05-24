@@ -17,7 +17,7 @@ def write_message(raw_msg):
 
     # print out the transaction
     print("Transaction: {}".format(response.text))
-    print("View it live at https://eternitywall.it/m/{}".format(response.text))
+    print("View it live at http://eternitywall.it/m/{}".format(response.text))
 
 if __name__ == '__main__':
     write_message(sys.argv[1])

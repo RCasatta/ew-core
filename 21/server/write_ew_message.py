@@ -15,14 +15,17 @@ payment = Payment(app, wallet)
 
 @app.route("/hello")
 def hello():
+    print("hello!")
     return "hello!"
 
 @app.route('/write-ew-message')
 @payment.required(1000)
 def write_ew_message():
     """Write a message to the blockchain."""
+    print("write_ew_message()")
 
     msg = request.args.get('message')
+    print("received message {}".format(msg))
 
     # Create a bitcoin script object with our message
     if (len(msg) > 72):
