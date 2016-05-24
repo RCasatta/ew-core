@@ -13,6 +13,9 @@ app = Flask(__name__)
 wallet = Two1Wallet(Two1Wallet.DEFAULT_WALLET_PATH, TwentyOneProvider())
 payment = Payment(app, wallet)
 
+@app.route("/hello")
+def hello():
+    return "hello!"
 
 @app.route('/write-ew-message')
 @payment.required(1000)
