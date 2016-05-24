@@ -1,14 +1,13 @@
 #! /usr/bin/env python
 
-from pycoin.key.BIP32Node import BIP32Node
+import hashlib
+import httplib
+import random
+import urllib
+
 from mnemonic import Mnemonic
-from pycoin.serialize import h2b
 from pycoin.serialize import b2h
 from signmessage import sign_and_verify
-import httplib
-import urllib
-import hashlib
-import random
 
 EW_DERIVATION = 4544288
 

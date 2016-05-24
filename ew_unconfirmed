@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+from ewcore.ew_unconfirmed import ew_unconfirmed
+
+if __name__ == "__main__":
+    ew_unconfirmed()
+
