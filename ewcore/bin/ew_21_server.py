@@ -29,6 +29,7 @@ def write_ew_message_endpoint():
     return msg
 
 
+# TODO separate GET and POST for different payment
 @app.route('/ew/hash', methods=['GET', 'POST'])
 @payment.required(1000)
 def ew_hash():
@@ -50,6 +51,14 @@ def manifest():
     with open('./manifest.yaml', 'r') as f:
         manifest = yaml.load(f)
     return json.dumps(manifest)
+
+
+@app.route('/client')
+def client():
+    '''
+    Provides an example client script.
+    '''
+    return ""  # send_from_directory('static', 'client.py')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
