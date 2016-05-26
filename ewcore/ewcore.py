@@ -1,3 +1,7 @@
+import random
+import http.client
+import urllib
+
 from ewcore.config import read_config_file
 from mnemonic import Mnemonic
 from pycoin.key.BIP32Node import BIP32Node
@@ -31,4 +35,37 @@ class EW(object):
         assert VerifyMessage(self.address, message, signature)
 
         return signature
+
+    def post_hash(self, hashvalue):
+        return self.hash(hashvalue, 'POST')
+
+    def get_hash(self, hashvalue):
+        return self.hash(hashvalue, 'GET')
+
+    def hash(self, hashvalue, method):
+        challenge = str(random.random()) + hashvalue
+        signature = self.sign(challenge)
+
+        # http://eternitywall.it/v1/auth/hash/[hash]?account=[account]&signature=[signature]&challenge=[challenge]
+        # for https use https://eternitywall.appspot.com/v1/auth/hash/[hash]?
+        # account=[account]&signature=[signature]&challenge=[challenge]
+        params = {'account': self.address, 'signature': signature, "challenge": challenge}
+        print("params " + str(params))
+        path = "/v1/auth/hash/" + hashvalue + "?" + urllib.parse.urlencode(params)
+
+        # returns http code
+        # 400 if bad missing unrecognized parameter
+        # 401 if unauthorized (invalid signature or not existing account)
+        # 200 if OK
+
+        print(method + " path " + path)
+        conn = http.client.HTTPConnection('eternitywall.it')
+        conn.request(method, path)
+        resp = conn.getresponse()
+        print("resp " + str(resp.status) + "," + str(resp.reason))
+        data = resp.read()
+        conn.close()
+
+        return data
+
 
