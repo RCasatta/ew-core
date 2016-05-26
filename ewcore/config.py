@@ -17,6 +17,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+import os
+
+
 """
 Utilities for reading bitcoin configuration files.
 """
@@ -28,7 +31,8 @@ def read_config_file(filename):
     Raises :const:`IOError` if unable to open file, or :const:`ValueError`
     if an parse error occurs.
     """
-    f = open(filename)
+    a = os.path.dirname(os.path.abspath(__file__))
+    f = open(a + "/" + filename)
     try:
         cfg = {}
         for line in f:
