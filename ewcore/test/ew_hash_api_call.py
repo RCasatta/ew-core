@@ -6,14 +6,7 @@ import random
 import urllib
 import binascii
 
-from ewcore.config import read_config_file
-from mnemonic import Mnemonic
-from bitcoin.wallet import CBitcoinSecret
-from bitcoin.signmessage import BitcoinMessage, VerifyMessage, SignMessage
-from pycoin.key.BIP32Node import BIP32Node
 from ewcore import ewcore
-
-
 
 EW_DERIVATION = 4544288
 
