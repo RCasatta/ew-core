@@ -1,36 +1,24 @@
 #!/usr/bin/env python3
-from flask import Flask, request
 
 from two1.wallet.two1_wallet import Two1Wallet
 from two1.blockchain.twentyone_provider import TwentyOneProvider
 from two1.bitcoin import utils
 from two1.bitcoin import Script
 from two1.bitcoin import Transaction, TransactionInput, TransactionOutput
-from two1.bitserv.flask import Payment
 
 # Create application objects
-app = Flask(__name__)
+
 wallet = Two1Wallet(Two1Wallet.DEFAULT_WALLET_PATH, TwentyOneProvider())
-payment = Payment(app, wallet)
 
-@app.route("/hello")
-def hello():
-    print("hello!")
-    return "hello!"
 
-@app.route('/write-ew-message')
-@payment.required(1000)
-def write_ew_message():
+def write_ew_message(msg):
     """Write a message to the blockchain."""
-    print("write_ew_message()")
-
-    msg = request.args.get('message')
-    print("received message {}".format(msg))
+    print("write_ew_message({})" % msg)
 
     # Create a bitcoin script object with our message
-    if (len(msg) > 72):
+    if len(msg) > 72:
         raise Exception('Message is too long and may not be accepted.')
-    msg= "EW " + msg;
+    msg = "EW " + msg
     message_script = Script('OP_RETURN 0x{}'.format(utils.bytes_to_str(msg.encode())))
 
     # Define the fee we're willing to pay for the tx
@@ -82,5 +70,4 @@ def write_ew_message():
     tx = wallet.broadcast_transaction(txn.to_hex())
     return tx
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+
