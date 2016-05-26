@@ -15,7 +15,7 @@ from pycoin.key.BIP32Node import BIP32Node
 EW_DERIVATION = 4544288
 
 
-def test_ew_derivation():
+def test_ew_call():
     # passphrase of an Eternity Wall account with a defined alias (you could use Eternity Wall android app
     # to obtain one or create by your own with the same rules)
     conf = read_config_file("ew.conf")
@@ -37,7 +37,9 @@ def test_ew_derivation():
 
     assert VerifyMessage(address, message, signature)
 
-    hashvalue = binascii.hexlify(hashlib.sha256(str(random.random()).encode()).digest()).decode('ascii')
+    # the following is the document we are hashing to commit in the blockchain, in this case a random string
+    document = str(random.random())
+    hashvalue = binascii.hexlify(hashlib.sha256(document.encode()).digest()).decode('ascii')
 
     print("Address: %s" % address)
     print("Message: %s" % message)
@@ -64,4 +66,4 @@ def test_ew_derivation():
     print("resp " + str(resp.status) + "," + str(resp.reason))
 
 if __name__ == '__main__':
-    test_ew_derivation()
+    test_ew_call()
