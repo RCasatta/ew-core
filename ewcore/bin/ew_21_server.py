@@ -60,7 +60,7 @@ def check_input():
 def manifest():
     """Provide the app manifest to the two1 crawler."""
     a = os.path.dirname(os.path.abspath(__file__))
-    with open('./manifest.yaml', 'r') as f:
+    with open(a + '/manifest.yaml', 'r') as f:
         manifest = yaml.load(f)
     return json.dumps(manifest)
 
