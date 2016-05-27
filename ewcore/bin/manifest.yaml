@@ -13,12 +13,12 @@ info:
 
     # insert the hash
 
-    21 buy http://10.244.61.87:5000/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
+    21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
 
 
     # get the stamp proving the hash (need a while to be inserted)
 
-    21 buy http://10.244.61.87:5000/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
+    21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
 
   x-21-category: utilities
   x-21-app-image: "https://eternitywall.appspot.com/img/eternity_logo_final_square_400x400.png"
@@ -34,7 +34,7 @@ info:
     name: Eternity Wall
     email: riccardo@eternitywall.it
     url: http://eternitywall.it
-host: 10.244.61.87:5000
+host: 21.eternitywall.it
 schemes:
   - http
 
