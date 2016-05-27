@@ -1,3 +1,6 @@
+
+swagger: '2.0'
+
 info:
   title: 'Notary'
   description: 'Cheaply create proof of existence'
@@ -22,10 +25,15 @@ info:
   x-21-total-price:
     min: 100
     max: 1000
+  x-21-keywords:
+     - notary
+     - timestamp
+     - hash
+     - eternitywall
   contact:
-
     name: Eternity Wall
     email: riccardo@eternitywall.it
+    url: http://eternitywall.it
 host: 10.244.61.87:5000
 schemes:
   - http
@@ -62,7 +70,7 @@ paths:
           -
             name: hash
             in: query
-            description: Hash to check
+            description: Hash to insert
             required: true
             type: string
             format: 64 chars hex
