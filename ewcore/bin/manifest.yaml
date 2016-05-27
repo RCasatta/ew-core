@@ -46,6 +46,8 @@ paths:
     get:
       description: |
         Gets `Stamp` object relative to the hash. If the hash has been committed in the blockchain contains all the merkle proof to verify commitment of the hash in the blockchain in an indipendent way. If the hash isn't in the blockchain return "not found" status or if it is in the queue to be committed return the "processing" status.
+      summary: Gets `Stamp` object relative to the hash
+      produces: [application/json]
       parameters:
         -
           name: hash
@@ -65,7 +67,8 @@ paths:
           description: Payment required
     post:
       description: |
-        Put a hash in the blockchain.
+        Put a hash in a queue that will be inserted int the blockchain.
+      summary: Put a hash in a queue that will be inserted in the blockchain, at the moment there is a commitment to the blockchain every 24 hours.
       parameters:
           -
             name: hash
