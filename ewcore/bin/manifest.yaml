@@ -40,6 +40,8 @@ schemes:
 
 x-21-manifest-path: /manifest
 
+basePath: /
+
 paths:
   /v1/hash:
     get:
