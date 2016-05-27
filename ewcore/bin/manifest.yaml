@@ -67,8 +67,8 @@ paths:
           description: Payment required
     post:
       description: |
-        Put a hash in a queue that will be inserted int the blockchain.
-      summary: Put a hash in a queue that will be inserted in the blockchain, at the moment there is a commitment to the blockchain every 24 hours.
+        Put a hash in a queue that will be inserted in the blockchain, at the moment there is a commitment to the blockchain every 24 hours.
+      summary: Put a hash in a queue that will be inserted int the blockchain.
       parameters:
           -
             name: hash
