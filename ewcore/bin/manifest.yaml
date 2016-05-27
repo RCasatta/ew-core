@@ -1,9 +1,7 @@
 info:
-  title: 'EW Notary'
+  title: 'Notary'
   description: 'Cheaply create proof of existence'
-  ## TODO: Replace this IP address with your 21 address
-  ##       You can get your IP address by running the following command
-  ## python3 -c 'from two1.commands.util import zerotier; print(zerotier.get_address("21market"))'
+
   x-21-quick-buy: >
     # create hash of a document
 
@@ -12,27 +10,92 @@ info:
 
     # insert the hash
 
-    21 buy http://10.244.61.87:5000/ew/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
+    21 buy http://10.244.61.87:5000/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
 
 
     # get the stamp proving the hash (need a while to be inserted)
 
-    21 buy http://10.244.61.87:5000/ew/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
+    21 buy http://10.244.61.87:5000/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
 
   x-21-category: utilities
   x-21-app-image: "https://eternitywall.appspot.com/img/eternity_logo_final_square_400x400.png"
   x-21-total-price:
-    min: 1000
+    min: 100
     max: 1000
   contact:
-    ## TODO: Replace this information with your own
-    name: Riccardo Casatta
+
+    name: Eternity Wall
     email: riccardo@eternitywall.it
-## TODO: Replace this IP address with your 21 address
-##       You can get your IP address by running the following command
-## python3 -c 'from two1.commands.util import zerotier; print(zerotier.get_address("21market"))'
 host: 10.244.61.87:5000
 schemes:
   - http
-basePath: /
+
 x-21-manifest-path: /manifest
+
+basePath: /v1
+paths:
+  /hash:
+    get:
+      description: |
+        Gets `Stamp` object relative to the hash. If the hash has been committed in the blockchain contains all the merkle proof to verify commitment of the hash in the blockchain in an indipendent way. If the hash isn't in the blockchain return "not found" status or if it is in the queue to be committed return the "processing" status.
+      parameters:
+        -
+          name: hash
+          in: query
+          description: Hash to check
+          required: true
+          type: string
+          format: 64 chars hex
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Stamp'
+        400:
+          description: Bad request, hash parameter must be an hex string of 64 chars
+        402:
+          description: Payment required
+    post:
+      description: |
+        Put a hash in the blockchain.
+      parameters:
+          -
+            name: hash
+            in: query
+            description: Hash to check
+            required: true
+            type: string
+            format: 64 chars hex
+      responses:
+          # Response code
+          200:
+            description: Successful response
+          400:
+            description: Bad request
+          402:
+            description: Payment required
+definitions:
+  Stamp:
+    type: object
+    properties:
+      timestamp:
+        type: integer
+      status:
+        type: string
+      txHash:
+        type: string
+      hash:
+          type: string
+      merkle:
+        type: object
+        properties:
+          index:
+            type: integer
+          root:
+            type: string
+          hash:
+            type: string
+          siblings:
+            type: array
+            items:
+              type: string

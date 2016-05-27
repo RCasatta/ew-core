@@ -1,11 +1,13 @@
-import json
+#!/usr/bin/env python3
 
+import json
 import flask
 import yaml
+import os
+
 from flask import request, abort
 from two1.bitserv.flask import Payment
 from two1.wallet import Wallet
-
 from ewcore.two1.server.ew_hash import ew_get_hash, ew_post_hash, is_hash
 from ewcore.two1.server.write_ew_message import write_ew_message
 
@@ -20,7 +22,7 @@ def hello():
     return 'Hello, world'
 
 
-@app.route('/ew/message')
+@app.route('/v1/message')
 @payment.required(1000)
 def write_ew_message_endpoint():
     print("write_ew_message_endpoint()")
@@ -29,25 +31,35 @@ def write_ew_message_endpoint():
     return msg
 
 
-# TODO separate GET and POST for different payment
-@app.route('/ew/hash', methods=['GET', 'POST'])
+@app.route('/v1/hash', methods=['GET'])
+@payment.required(100)
+def v1_hash_get():
+    print("ew_get_hash()")
+    hash_value = check_input()
+    return ew_get_hash(hash_value)
+
+
+@app.route('/v1/hash', methods=['POST'])
 @payment.required(1000)
-def ew_hash():
-    print("ew_hash() " + request.method)
+def v1_hash_post():
+    print("ew_post_hash()")
+    hash_value = check_input()
+    return ew_post_hash(hash_value)
+
+
+def check_input():
     hash_value = request.args.get('hash')
     print("hash_value=" + hash_value)
     if not is_hash(hash_value):
+        print("hash not valid")
         abort(400)
-
-    if request.method == 'POST':
-        return ew_post_hash(hash_value)
-    else:
-        return ew_get_hash(hash_value)
+    return hash_value
 
 
 @app.route('/manifest')
 def manifest():
     """Provide the app manifest to the two1 crawler."""
+    a = os.path.dirname(os.path.abspath(__file__))
     with open('./manifest.yaml', 'r') as f:
         manifest = yaml.load(f)
     return json.dumps(manifest)
@@ -55,9 +67,8 @@ def manifest():
 
 @app.route('/client')
 def client():
-    '''
-    Provides an example client script.
-    '''
+    """Provides an example client script."""
+
     return ""  # send_from_directory('static', 'client.py')
 
 if __name__ == "__main__":
