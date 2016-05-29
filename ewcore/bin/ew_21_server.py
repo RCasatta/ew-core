@@ -5,7 +5,8 @@ import flask
 import yaml
 import os
 
-from flask import request, abort
+from flask import request, abort, Response
+
 from two1.bitserv.flask import Payment
 from two1.wallet import Wallet
 from ewcore.two1.server.ew_hash import ew_get_hash, ew_post_hash, is_hash
@@ -62,14 +63,19 @@ def manifest():
     a = os.path.dirname(os.path.abspath(__file__))
     with open(a + '/manifest.yaml', 'r') as f:
         manifest = yaml.load(f)
-    return json.dumps(manifest)
+
+    return Response(json.dumps(manifest), mimetype='application/json')
 
 
 @app.route('/client')
 def client():
     """Provides an example client script."""
+    a = os.path.dirname(os.path.abspath(__file__))
+    with open(a + '/ew_21_client.py', 'r') as f:
+        ret = f.read()
 
-    return ""  # send_from_directory('static', 'client.py')
+    return Response(ret, mimetype='text/plain')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

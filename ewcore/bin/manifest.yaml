@@ -8,7 +8,8 @@ info:
   x-21-quick-buy: >
     # create hash of a document
 
-    shasum -a 256 README.md 44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa  README.md
+    shasum -a 256 README.md
+    44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa  README.md
 
 
     # insert the hash
