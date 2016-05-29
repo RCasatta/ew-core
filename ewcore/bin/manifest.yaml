@@ -21,7 +21,7 @@ info:
     21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
 
   x-21-category: utilities
-  x-21-app-image: "https://eternitywall.appspot.com/img/eternity_logo_final_square_400x400.png"
+  x-21-app-image: "https://cdn.filepicker.io/api/file/bOfYfMYrTU2im7Ux5fsl"
   x-21-total-price:
     min: 100
     max: 1000
