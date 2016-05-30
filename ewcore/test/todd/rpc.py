@@ -34,4 +34,5 @@
 import bitcoin.rpc
 
 proxy_connection = bitcoin.rpc.Proxy()
-print(proxy_connection.getnewaddress())
+print(proxy_connection.getinfo())
+print(proxy_connection.getrawmempool())
