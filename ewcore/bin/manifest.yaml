@@ -12,12 +12,12 @@ info:
     44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa  README.md
 
 
-    # insert the hash
+    # insert the hash (1000 satoshi)
 
     21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
 
 
-    # get the stamp proving the hash (need a while to be inserted)
+    # get the stamp proving the hash, after inserting the hash it takes a while to be commited in the blockchain, in the meantime you receive "processing" status (100 satoshi)
 
     21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
 
