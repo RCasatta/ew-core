@@ -7,7 +7,6 @@ import binascii
 
 from ewcore import ewcore
 
-EW_DERIVATION = 4544288
 
 
 def test_ew_call():
