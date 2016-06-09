@@ -8,7 +8,6 @@ import binascii
 from ewcore import ewcore
 
 
-
 def test_ew_call():
     # the following is the document we are hashing to commit in the blockchain, in this case a random string
     document = str(random.random())
@@ -22,7 +21,6 @@ def test_ew_call():
     ret_get = ew.get_hash(hash_value)
 
     print("ret_get=" + ret_get.decode())
-
 
 
 if __name__ == '__main__':
