@@ -33,7 +33,7 @@ def write_ew_message_endpoint():
 
 
 @app.route('/v1/hash', methods=['GET'])
-@payment.required(100)
+@payment.required(10)
 def v1_hash_get():
     print("ew_get_hash()")
     (hash_value, nonce_value) = check_input()
