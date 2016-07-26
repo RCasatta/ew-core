@@ -6,16 +6,16 @@ from ewcore import ewcore
 ew = ewcore.EW()
 
 
-def ew_get_hash(hash):
+def ew_get_hash(hash, nonce):
     """get a hash stamp through ew."""
-    print("ew_get_hash('%s')" % hash)
-    return ew.get_hash(hash)
+    print("ew_get_hash('%s,%s')" % (hash, nonce))
+    return ew.get_hash(hash, nonce)
 
 
-def ew_post_hash(hash):
+def ew_post_hash(hash, nonce):
     """Write a hash to the blockchain through ew."""
-    print("ew_post_hash('%s')" % hash)
-    return ew.post_hash(hash)
+    print("ew_post_hash('%s,%s')" % (hash, nonce))
+    return ew.post_hash(hash, nonce)
 
 
 def is_hash(s):

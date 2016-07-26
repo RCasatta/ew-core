@@ -36,25 +36,30 @@ def write_ew_message_endpoint():
 @payment.required(100)
 def v1_hash_get():
     print("ew_get_hash()")
-    hash_value = check_input()
-    return ew_get_hash(hash_value)
+    (hash_value, nonce_value) = check_input()
+    return ew_get_hash(hash_value, nonce_value)
 
 
 @app.route('/v1/hash', methods=['POST'])
 @payment.required(1000)
 def v1_hash_post():
     print("ew_post_hash()")
-    hash_value = check_input()
-    return ew_post_hash(hash_value)
+    (hash_value, nonce_value) = check_input()
+    return ew_post_hash(hash_value, nonce_value)
 
 
 def check_input():
     hash_value = request.args.get('hash')
+    nonce_value = request.args.get('nonce')
     print("hash_value=" + hash_value)
+    print("nonce_value=" + nonce_value)
     if not is_hash(hash_value):
         print("hash not valid")
         abort(400)
-    return hash_value
+    if nonce_value and not is_hash(nonce_value):
+        print("nonce exist but is not valid")
+        abort(400)
+    return hash_value, nonce_value
 
 
 @app.route('/manifest')

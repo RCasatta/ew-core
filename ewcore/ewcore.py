@@ -1,6 +1,7 @@
 import random
 import http.client
 import urllib
+import binascii
 
 from ewcore.config import read_config_file
 from mnemonic import Mnemonic
@@ -15,8 +16,11 @@ class EW(object):
 
     def __init__(self):
         conf = read_config_file("ew.conf")
-        mnemo = Mnemonic('english')
-        entropy = mnemo.to_entropy(conf['passphrase'])
+        if conf['entropy']:
+            entropy = binascii.unhexlify(conf['entropy'])
+        else:
+            mnemo = Mnemonic('english')
+            entropy = mnemo.to_entropy(conf['passphrase'])
         print("entropy=" + entropy.hex())
         master = BIP32Node.from_master_secret(entropy, 'BTC')
         print("master address=" + master.address())
@@ -36,13 +40,13 @@ class EW(object):
 
         return signature
 
-    def post_hash(self, hashvalue):
-        return self.hash(hashvalue, 'POST')
+    def post_hash(self, hashvalue, noncevalue):
+        return self.hash(hashvalue, noncevalue, 'POST')
 
-    def get_hash(self, hashvalue):
-        return self.hash(hashvalue, 'GET')
+    def get_hash(self, hashvalue, noncevalue):
+        return self.hash(hashvalue, noncevalue, 'GET')
 
-    def hash(self, hashvalue, method):
+    def hash(self, hashvalue, noncevalue, method):
         challenge = str(random.random()) + hashvalue
         signature = self.sign(challenge)
 
@@ -50,6 +54,8 @@ class EW(object):
         # for https use https://eternitywall.appspot.com/v1/auth/hash/[hash]?
         # account=[account]&signature=[signature]&challenge=[challenge]
         params = {'account': self.address, 'signature': signature, "challenge": challenge}
+        if(noncevalue):
+            params['nonce'] = noncevalue
         print("params " + str(params))
         path = "/v1/auth/hash/" + hashvalue + "?" + urllib.parse.urlencode(params)
 
