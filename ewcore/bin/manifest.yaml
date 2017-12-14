@@ -1,0 +1,116 @@
+
+swagger: '2.0'
+
+info:
+  title: 'Notary'
+  description: 'Cheaply create proof of existence'
+
+  x-21-quick-buy: >
+    # create hash of a document
+
+    shasum -a 256 README.md
+    44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa  README.md
+
+
+    # insert the hash (1000 satoshi)
+
+    21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa --request POST
+
+
+    # get the stamp proving the hash, after inserting the hash it takes up to 12h to be commited in the blockchain, in the meantime you receive "processing" status (10 satoshi)
+
+    21 buy http://21.eternitywall.it/v1/hash?hash=44ee321219c5db38b31f876521ba950af4c347445de5e2366a45c1c1685e50aa
+
+
+
+  x-21-category: utilities
+  x-21-app-image: "https://cdn.filepicker.io/api/file/bOfYfMYrTU2im7Ux5fsl"
+  x-21-total-price:
+    min: 1000
+    max: 1000
+  x-21-keywords:
+     - notary
+     - timestamp
+     - hash
+     - eternitywall
+  contact:
+    name: Eternity Wall
+    email: riccardo@eternitywall.it
+    url: http://eternitywall.it
+host: 21.eternitywall.it
+schemes:
+  - http
+
+x-21-manifest-path: /manifest
+
+basePath: /
+
+paths:
+  /v1/hash:
+    get:
+      description: |
+        Gets `Stamp` object relative to the hash. If the hash has been committed in the blockchain contains all the merkle proof to verify commitment of the hash in the blockchain in an indipendent way. If the hash isn't in the blockchain return "not found" status or if it is in the queue to be committed return the "processing" status.
+      summary: Gets `Stamp` object relative to the hash
+      produces: [application/json]
+      parameters:
+        -
+          name: hash
+          in: query
+          description: Hash to check
+          required: true
+          type: string
+          format: 64 chars hex
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Stamp'
+        400:
+          description: Bad request, hash parameter must be an hex string of 64 chars
+        402:
+          description: Payment required
+    post:
+      description: |
+        Put a hash in a queue that will be inserted in the blockchain, at the moment there is a commitment to the blockchain every 12 hours.
+      summary: Put a hash in a queue that will be inserted int the blockchain.
+      parameters:
+          -
+            name: hash
+            in: query
+            description: Hash to insert
+            required: true
+            type: string
+            format: 64 chars hex
+      responses:
+          # Response code
+          200:
+            description: Successful response
+          400:
+            description: Bad request
+          402:
+            description: Payment required
+definitions:
+  Stamp:
+    type: object
+    properties:
+      timestamp:
+        type: integer
+      status:
+        type: string
+      txHash:
+        type: string
+      hash:
+          type: string
+      merkle:
+        type: object
+        properties:
+          index:
+            type: integer
+          root:
+            type: string
+          hash:
+            type: string
+          siblings:
+            type: array
+            items:
+              type: string
